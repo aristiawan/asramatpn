@@ -51,7 +51,7 @@
 </div>
 
 <div class="row" style="display: block;">
-    <div class="col-md-7 col-sm-7  ">
+    <div class="col-md-5 col-sm-5  ">
         <div class="x_panel">
             <div class="x_title">
                 <h2>Table Penilaian</h2>
