@@ -32,6 +32,8 @@ class cluster extends Controller
         } catch (\Exception $e) {
             error_log($e);
         }
+        
+        // error_log(json_encode($data_kuisoner));
 
         $new_data_kuisoner      = [];
         $new_data_id_kuisoner   = []; 
@@ -41,12 +43,14 @@ class cluster extends Controller
             array_push($new_data_id_kuisoner, $row->id_kuisoner);
         }
         
+        // error_log(json_encode($new_data_id_kuisoner));
+        
         $k                  = 3;
         $iterasi            = 1000;
         $labels              = ['sangat puas','puas','tidak puas'];
         $centroid           = $this->centroid_choose($new_data_kuisoner);
+        // error_log(json_encode($centroid));
         $hasil_kuisoner     = $this->k_means($new_data_kuisoner, $new_data_id_kuisoner, $k, $iterasi, $centroid, $labels);
-        
         $kuisoner_kmeans    = $hasil_kuisoner['list_final'];
         $last_iterasi       = $hasil_kuisoner['last_iterasi'];
         $label              = $hasil_kuisoner['label'];
@@ -190,7 +194,6 @@ class cluster extends Controller
             $data_value     = [];
             array_push($data_value, $data_fasilitas[$i][$kolom_x], $data_fasilitas[$i][$kolom_y]);
             array_push($data_output, $data_value);
-
         }
 
         return $data_output;
@@ -212,15 +215,16 @@ class cluster extends Controller
         }catch (\Exception $e) {
             error_log($e);
         }
+
         try{
             usort($list_average, function($x, $y) {
                 $result = $x['avarage'] > $y['avarage'];
-                error_log($result);
                 return $result;
             } );
         }catch (\Exception $e) {
             error_log($e);
         }
+
         try{
 
             foreach($list_average as $key => $value){
@@ -229,19 +233,12 @@ class cluster extends Controller
         }catch (\Exception $e) {
             error_log($e);
         }
-        if(count($data[0])==25){
-            error_log(json_encode($data));
-            error_log('------------------------');
-            error_log(json_encode($list_average));
-        };
         
         $last_index = $arraysize - 1;
-        
         array_push($list_centroid_choosed, $new_centroid[0]);
         array_push($list_centroid_choosed, $new_centroid[floor($last_index / 2)]);
         array_push($list_centroid_choosed, $new_centroid[$last_index]);
-     
-
+  
         return $list_centroid_choosed;
 
     }
@@ -308,27 +305,27 @@ class cluster extends Controller
 
         for($k=0; $k<$kluster; $k++){
             $centroid_baru  =   [];
-            $list_data_kuisoner_dalam_cluster = [];
+            $list_data_kuisoner_dalam_ter = [];
 
             for($index = 0 ; $index < count($data); $index++){
 
                 if($cluster[$index] == $k){
-                    array_push($list_data_kuisoner_dalam_cluster, $data[$index]);
+                    array_push($list_data_kuisoner_dalam_ter, $data[$index]);
                 }
 
             }
 
-            $total_kuisoner_dalam_kelas = count($list_data_kuisoner_dalam_cluster);
-            $jumlah_kolom               = count($list_data_kuisoner_dalam_cluster[0]);
+            $total_kuisoner_dalam_kelas = count($list_data_kuisoner_dalam_ter);
+            $jumlah_kolom               = count($list_data_kuisoner_dalam_ter[0]);
 
             for($kolom=0; $kolom < $jumlah_kolom; $kolom++){
-                $list_nilai_kolom_data_cluster = [];
+                $list_nilai_kolom_data_ter = [];
 
-                for($row = 0 ; $row < count($list_data_kuisoner_dalam_cluster); $row++){
-                    array_push($list_nilai_kolom_data_cluster, $list_data_kuisoner_dalam_cluster[$row][$kolom]);
+                for($row = 0 ; $row < count($list_data_kuisoner_dalam_ter); $row++){
+                    array_push($list_nilai_kolom_data_ter, $list_data_kuisoner_dalam_ter[$row][$kolom]);
                 }
 
-                $centroid_baru_kolom =  array_sum($list_nilai_kolom_data_cluster)/$total_kuisoner_dalam_kelas;
+                $centroid_baru_kolom =  array_sum($list_nilai_kolom_data_ter)/$total_kuisoner_dalam_kelas;
                 array_push($centroid_baru, $centroid_baru_kolom);
             }    
             array_push($new_centroid, $centroid_baru);
@@ -344,15 +341,9 @@ class cluster extends Controller
         $sse_final      = 0;
         $centroid_final = [];
         $jumlah_data    = count($data_id_kuisoner);
-        // if(count($data[0])==25){
-        // error_log(json_encode($centroid[0]));
-        // error_log(json_encode($centroid[1]));
-        // error_log(json_encode($centroid[2]));
-        // error_log('-------------------------------');
-        // }
        
         for($iter=0; $iter<$iterasi; $iter++){
-            $list_cluster = [];
+            $list_ter = [];
 
             for ($row = 0; $row < $jumlah_data;  $row++){
                 $list_jarak_centroid = [];
@@ -361,26 +352,23 @@ class cluster extends Controller
                     $jarak = $this->equalidiance_distance($data[$row],$centroid[$k]);
                     array_push($list_jarak_centroid,  $jarak);
                 }
-                // if(count($data[$row])==25){
-                //     error_log(json_encode($list_jarak_centroid));
-                // }
+
                 $cluster_chossed = array_search(min($list_jarak_centroid), $list_jarak_centroid, true); 
-                array_push($list_cluster,$cluster_chossed);
+                array_push($list_ter,$cluster_chossed);
             }
             
-            // error_log('------------------------------------------------------------------');
-            $sse_sekarang = $this->sse($data, $centroid, $list_cluster, $kluster);
+            $sse_sekarang = $this->sse($data, $centroid, $list_ter, $kluster);
 
-            if(count(array_unique($list_cluster)) < $kluster or  $sse_final == $sse_sekarang  ){
+            if(count(array_unique($list_ter)) < $kluster or  $sse_final == $sse_sekarang  ){
  
                 break;
             }
             
             else{
 
-                $centroid           = $this->update_centroid($list_cluster, $data, $kluster);
+                $centroid           = $this->update_centroid($list_ter, $data, $kluster);
                 $centroid_final     = $centroid;
-                $list_final         = $list_cluster;
+                $list_final         = $list_ter;
                 $last_iterasi       = $iter;
             }
 
@@ -389,11 +377,6 @@ class cluster extends Controller
             }
             
         }
-
-        // error_log(json_encode($centroid_final));
-        // error_log(json_encode($sse_final));
-        // error_log(json_encode($sse_final));
-        // error_log('------------------------------------');
 
         $label              = $this->labeling_cluster($centroid_final, $label);
         $hasil= [

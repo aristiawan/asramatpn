@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use View;
 use DB;
 use App\ModelPenilaian;
+use App\ModelJenjang_Pendidikan;
 use Illuminate\Http\Request;
 
 class landingpage extends Controller
@@ -19,7 +20,10 @@ class landingpage extends Controller
         ->get();
         
         $data_nilai = ModelPenilaian::all();
+
+        $jp         = ModelJenjang_Pendidikan::all();
+
        
-        return View::make('index')->with('data',$data)->with('data_nilai',$data_nilai);
+        return View::make('index')->with('data',$data)->with('data_nilai',$data_nilai)->with('jenjang_pendidikan', $jp);
     }
 }

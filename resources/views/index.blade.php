@@ -17,9 +17,54 @@
     <link rel="stylesheet" href=" {{ URL::asset('template/oneschool/oneschool/fonts/flaticon/font/flaticon.css') }}">
     <link rel="stylesheet" href=" {{ URL::asset('template/oneschool/oneschool/css/aos.css') }}">
     <link rel="stylesheet" href=" {{ URL::asset('template/oneschool/oneschool/css/style.css') }}">
+
+    <style>
+      #message-danger, #message-success{
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          z-index:999; 
+      }
+      #danger-message, #success-message {
+          margin: 0 auto;
+      }
+
+      .usia:focus, .jenjang:focus {   
+        border-color: rgba(126, 239, 104, 0.8) !important;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6) !important;
+        outline: 1 !important;
+      }
+
+      .form-control{ 
+          height: 50px !important;
+      }
+    </style>
+
   </head>
 
   <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+
+  @if(\Session::has('message-danger'))
+  <div id="message-danger" >
+      <div style="padding: 5px;">
+          <div id="danger-message" class="alert alert-danger">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              <p > {{Session::get('message-danger')}}</p>
+          </div>
+      </div>
+    </div>
+    @endif
+    @if(\Session::has('message-success'))
+    <div id="message-success" >
+        <div style="padding: 5px;">
+            <div id="success-message" class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <p> {{Session::get('message-success')}}</p>
+            </div>
+        </div>
+    </div>
+    @endif
 
   <div class="site-wrap">
     <div class="site-mobile-menu site-navbar-target">
@@ -56,7 +101,7 @@
           <div class="ml-auto w-25">
             <nav class="site-navigation position-relative text-right" role="navigation">
               <ul class="site-menu main-menu site-menu-dark js-clone-nav mr-auto d-none d-lg-block m-0 p-0">
-                <li class="cta"><a href="#survey-section" class="nav-link"><span>KUISONER</span></a></li>
+                <li class="cta"><a href="#survey-section" class="nav-link"><span>KUESIONER</span></a></li>
               </ul>
             </nav>
             <a href="#" class="d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black float-right"><span class="icon-menu h3"></span></a>
@@ -69,13 +114,14 @@
       <div class="slide-1" style="background-image: url({{ URL::asset('template/oneschool/oneschool/images/kantor-bupati-kutai-barat.jpg')}})" data-stellar-background-ratio="0.5">
         <div class="container">
           <div class="row align-items-center justify-content-center">
-                <div style="text-align: center; margin-top: 0px; margin-right: 0px; margin-bottom: 0px;">
-                  <h1 class="mb-4" data-aos="fade-up" data-aos-delay="100">Website Kuisoner Asrama</h1>
+                <div style="text-align: center; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; color:white;">
+                  <h1 class="mb-4" data-aos="fade-up" data-aos-delay="100">Website Kuesioner Asrama</h1>
+                  <h2 class="mb-4" data-aos="fade-up" data-aos-delay="100">Website Ini Digunakan Untuk Mengukur Timgkat Kepuasan Penghuni Asrama Terhadap Fasilitas Asrama</h2>
                   <nav role="navigation">
                     <ul class="main-menu">
                       <li>
                         <p data-aos="fade-up" data-aos-delay="300">
-                          <a href="#survey-section" class="btn py-3 px-5 btn-pill" style="background-color:#7971ea !important;color: #fff !important">START KUISONER</a>
+                          <a href="#survey-section" class="btn py-3 px-5 btn-pill" style="background-color:#7971ea !important;color: #fff !important">START KUESIONER</a>
                         </p>
                       </li>
                     </ul>
@@ -88,27 +134,45 @@
       </div>
     </div>
 
-  
 
     <div class="site-section" id="survey-section">
       <div class="container">
       <div class="row justify-content-center">
           <div class="col-md-12">
             <div class="form-group row justify-content-center align-items-center" data-aos="fade-up" data-aos-delay="100"> 
-              <h2 class="section-title mb-3">Kuisoner </h2>
+              <h2 class="section-title mb-3">Kuesioner </h2>
             </div>
               <form method="post" action="/kuisoner/tambah" data-aos="fade-up" data-aos-delay="200">
               @csrf 
               <div class="form-group row">
-                <p>Keterangan : </p>
-              </div>
+                <span> Keterangan &nbsp; : </span>
+                <span>&nbsp;  | &nbsp;</span>
               @foreach($data_nilai as $penilaian)
-              <div class="form-group row">
-                <p>
-                    {{$penilaian->kode_nilai}} = {{$penilaian->keterangan}}
-                </p>
-              </div>
+                 <span>
+                    {{$penilaian->kode_nilai}} = {{$penilaian->keterangan}} 
+                </span>
+                <span>
+                &nbsp; | &nbsp;
+                </span>
               @endforeach
+              </div>
+              </br>
+              <div class="form-row">
+                <div class="col">
+                  <label for="Usia">Usia</label>
+                  <input type="number" name="input[usia]" class="form-control usia" required >
+                </div>
+                <div class="col">
+                  <label for="Jenjang Pendidikan">Jenjang Pendidikan</label>
+                  <select class="form-control jenjang" name="input[jenjang_pendidikan]" id="jenjang-pendidikan" required>
+                    <option value="" ></option>
+                    @foreach($jenjang_pendidikan as $jp)
+                    <option value="{{$jp->id_jenjang}}">{{$jp->jenjang}}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+              </br>
               <div class="form-group row">
                 <table class="table table-bordered">
                     <thead>
@@ -204,6 +268,7 @@
     </footer>
 
   </div> 
+ 
 
   <script src=" {{ URL::asset('template/oneschool/oneschool/js/jquery-3.3.1.min.js') }}"></script>
   <script src=" {{ URL::asset('template/oneschool/oneschool/js/jquery-migrate-3.0.1.min.js') }}"></script>
@@ -219,6 +284,21 @@
   <script src=" {{ URL::asset('template/oneschool/oneschool/js/jquery.fancybox.min.js')}}"></script>
   <script src=" {{ URL::asset('template/oneschool/oneschool/js/jquery.sticky.js')}}"></script>
   <script src="{{ URL::asset('template/oneschool/oneschool/js/main.js')}}"></script>
-    
+  <script>
+  $(document).ready(function(){
+
+      window.setTimeout(function() {
+          $("#message-success").fadeTo(500, 0).slideUp(500, function(){
+              $('#message-success').hide();
+          });
+      }, 5000);
+
+      window.setTimeout(function() {
+          $("#message-danger").fadeTo(500, 0).slideUp(500, function(){
+              $('#message-danger').hide();
+          });
+      }, 5000);
+  });
+  </script>
   </body>
 </html>

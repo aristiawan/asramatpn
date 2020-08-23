@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use View;
 use DB;
 use App\ModelKuisoner;
+use App\ModelT_Kuisoner;
 use Illuminate\Http\Request;
 
 class kuisoner extends Controller
@@ -15,30 +16,45 @@ class kuisoner extends Controller
     }
 
     public function add(Request $request){
-        $id_kuisoner = ModelKuisoner::max('id_kuisoner');
+        try{
+            $id_kuisoner = ModelKuisoner::max('id_kuisoner');
 
-        if(!$id_kuisoner)
-            $id_kuisoner = 1;
-        else
-            $id_kuisoner = (int)$id_kuisoner+1;
+            if(!$id_kuisoner)
+                $id_kuisoner = 1;
+            else
+                $id_kuisoner = (int)$id_kuisoner+1;
 
-        error_log($id_kuisoner);
-        $id_penunjang_fasilitas = $request->input['penunjang_fasilitas'];
-        $id_penilaian = $request->input['nilai'];
-        foreach($id_penunjang_fasilitas as $key=>$value){
-            
-            $new_id_penunjang_fasilitas = $id_penunjang_fasilitas[$key];
-            $new_id_penilaian = $id_penilaian[$key];
+            error_log(json_encode($request));
+            $id_penunjang_fasilitas = $request->input['penunjang_fasilitas'];
+            $id_penilaian           = $request->input['nilai'];
+            $usia                   = $request->input['usia'];
+            $id_jenjang             = $request->input['jenjang_pendidikan'];
 
-            $kuisoner = new ModelKuisoner;
-            $kuisoner->id_penunjang_fasilitas = $new_id_penunjang_fasilitas;
-            $kuisoner->id_penilaian = $new_id_penilaian;
-            $kuisoner->id_kuisoner = $id_kuisoner;
-            $kuisoner->save();
-            
+            $t_kuisoner = new ModelT_Kuisoner;
+            $t_kuisoner->id_kuisoner = $id_kuisoner;
+            $t_kuisoner->usia = $usia;
+            $t_kuisoner->id_jenjang = $id_jenjang;
+            $t_kuisoner->save();
+
+            foreach($id_penunjang_fasilitas as $key=>$value){
+                
+                $new_id_penunjang_fasilitas = $id_penunjang_fasilitas[$key];
+                $new_id_penilaian = $id_penilaian[$key];
+
+                $kuisoner = new ModelKuisoner;
+                $kuisoner->id_penunjang_fasilitas = $new_id_penunjang_fasilitas;
+                $kuisoner->id_penilaian = $new_id_penilaian;
+                $kuisoner->id_kuisoner = $id_kuisoner;
+                $kuisoner->save();
+                
+            }
+
+        } catch (\Exception $e) {
+            error_log($e);
+            return redirect('/')->with('message-danger','Kuisoner gagal terkirim');
         }
 
-        return redirect('/');
+        return redirect('/')->with('message-success','Kuisoner anda telah terkirim');
         
     }
 
@@ -82,6 +98,24 @@ class kuisoner extends Controller
         $kuisoner->delete();
 
         return 'succes';
+    }
+
+    public function user(Request $request){
+  
+        $id_kuisoner = $request->id_kuisoner;
+        error_log($id_kuisoner);
+
+        $data = DB::table('t_kuisoner')
+                ->select('t_kuisoner.usia','jenjang_pendidikan.jenjang')
+                ->join('jenjang_pendidikan','t_kuisoner.id_jenjang','=','jenjang_pendidikan.id_jenjang')
+                ->where('t_kuisoner.id_kuisoner',$id_kuisoner)
+                ->get();
+
+        $json_resp = array(
+            "data" => $data
+        );
+
+        return response()->json($json_resp, 200); 
     }
 
     public function kamar(Request $request){

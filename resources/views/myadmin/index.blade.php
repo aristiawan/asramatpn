@@ -21,6 +21,7 @@
     <link href="{{ URL::asset('template/gentelella/vendors/jqvmap/dist/jqvmap.min.css')}}" rel="stylesheet"/>
     <link href="{{ URL::asset('template/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css')}}" rel="stylesheet">
     <link href="{{ URL::asset('template/gentelella/build/css/custom.min.css')}}" rel="stylesheet">
+
   </head>
 
   <body class="nav-md">

@@ -17,7 +17,7 @@
     </div>
 @endif
 
-<div class="row" style="display: block;">
+<!-- <div class="row" style="display: block;">
     <div class="col-md-5 col-sm-5  ">
         <div class="x_panel">
             <div class="x_title">
@@ -56,10 +56,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="row" style="display: block;">
-    <div class="col-md-7 col-sm-7  ">
+    <div class="col-md-12 col-sm-12  ">
         <div class="x_panel">
             <div class="x_title">
                 <h2>Table Penunjang Fasilitas</h2>
@@ -86,7 +86,7 @@
                                 <td>{{$penunjang->penunjang}}</td>
                                 <td style="text-align:center; color:#fff;">
                                     <button class="btn btn-info btn-sm edit-button" data-toggle="modal" data-target="#modal-edit" ><i class="fa fa-edit"></i> Edit</button>
-                                    <button class="btn btn-danger btn-sm hapus-button" data-toggle="modal" data-target="#modal-hapus"><i class="fa fa-trash-o"></i> Hapus</button>
+                                    <!-- <button class="btn btn-danger btn-sm hapus-button" data-toggle="modal" data-target="#modal-hapus"><i class="fa fa-trash-o"></i> Hapus</button> -->
                                 </td>
                             </tr>
                             @endforeach
@@ -189,7 +189,6 @@ $(document).ready(function(){
         ]
     });
     
-
     var table = $('#datatable').DataTable();
     var id_fasilitas = '';
     var id_penunjang = '';

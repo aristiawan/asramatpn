@@ -79,6 +79,22 @@
                 </button>
             </div>
             <div class="modal-body">
+            <div class="x_title">
+                    <h2>Table Pengisi</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="table-responsive">
+                        <table id="datatable-user" class="table table-striped table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center">Usia</th>
+                                    <th style="text-align:center">Jenjang Pendidikan</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
                 <div class="x_title">
                     <h2>Table Kamar</h2>
                     <div class="clearfix"></div>
@@ -210,6 +226,25 @@ $(document).ready(function(){
     $('#datatable tbody').on( 'click', 'button.info-button', function () {
         id_kuisoner = table.row($(this).parents('tr')).data()[0]; 
         console.log(id_kuisoner);
+
+        $('#datatable-user').DataTable( {
+                "destroy": true,
+                "paging": false,
+                "searching": false,
+                "serverSide": false,
+                "ajax": {
+                    "url": "/kuisoner/user",
+                    "type": "post",
+                    "data": {
+                        "_token": "{{ csrf_token() }}",
+                        "id_kuisoner":id_kuisoner
+                    }
+                },
+                "columns": [
+                        { "data": "usia" },
+                        { "data": "jenjang" }
+                    ]
+        });
 
         $('#datatable-kamar').DataTable( {
                 "destroy": true,

@@ -17,7 +17,7 @@
     </div>
 @endif
 
-<div class="row" style="display: block;">
+<!-- <div class="row" style="display: block;">
     <div class="col-md-5 col-sm-5  ">
         <div class="x_panel">
             <div class="x_title">
@@ -40,10 +40,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="row" style="display: block;">
-    <div class="col-md-7 col-sm-7  ">
+    <div class="col-md-12 col-sm-12  ">
         <div class="x_panel">
             <div class="x_title">
                 <h2>Table Penunjang</h2>
@@ -66,7 +66,7 @@
                                 <td>{{$penunjang->penunjang}}</td>
                                 <td style="text-align:center; color:#fff;">
                                     <a class="btn btn-info btn-sm edit-button" data-toggle="modal" data-target="#modal-edit" ><i class="fa fa-edit"></i> Edit</a>
-                                    <a class="btn btn-danger btn-sm hapus-button" data-toggle="modal" data-target="#modal-hapus"><i class="fa fa-trash-o"></i> Hapus</a>
+                                    <!-- <a class="btn btn-danger btn-sm hapus-button" data-toggle="modal" data-target="#modal-hapus"><i class="fa fa-trash-o"></i> Hapus</a> -->
                                 </td>
                             </tr>
                             @endforeach

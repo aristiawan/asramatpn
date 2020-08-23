@@ -39,6 +39,7 @@ Route::get('/kuisoner','kuisoner@home');
 Route::post('/kuisoner/tambah','kuisoner@add');
 Route::post('/kuisoner/edit','kuisoner@edit');
 Route::post('/kuisoner/hapus','kuisoner@delete');
+Route::post('/kuisoner/user','kuisoner@user');
 Route::post('/kuisoner/kamar','kuisoner@kamar');
 Route::post('/kuisoner/kamarmandi','kuisoner@kamarmandi');
 Route::post('/kuisoner/ruangtamu','kuisoner@ruangtamu');
